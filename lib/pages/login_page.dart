@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // Form is validated, proceed with login
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.pushReplacementNamed(context, '/main');
                   }
                 },
                 child: Text('Login'),

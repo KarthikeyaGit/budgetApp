@@ -1,6 +1,7 @@
 import 'package:budgetapp/pages/home_page.dart';
 import 'package:budgetapp/pages/loading_page.dart';
 import 'package:budgetapp/pages/login_page.dart';
+import 'package:budgetapp/pages/navigation.dart';
 import 'package:budgetapp/pages/registrations_page.dart';
 import 'package:flutter/material.dart';
 
@@ -22,9 +23,10 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (context) => const LoadingPage(),
+        '/main': (context) => const Navigation(),
         '/login': (context) => const LoginPage(),
         '/registration': (context) => const RegistrationPage(),
-        '/home': (context) => const HomePage(),
+        '/dashboard': (context) => const HomePage(),
       },
     );
   }
