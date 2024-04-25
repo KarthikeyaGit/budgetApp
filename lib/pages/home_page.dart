@@ -20,7 +20,6 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: ListView(
         // physics: ClampingScrollPhysics(), // Prevents overflow
-
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,31 +71,30 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       const Divider(
-                        color: Color.fromARGB(255, 186, 186, 186),
-                        thickness: 1, // You can adjust thickness as needed
-                      ),
+                          color: Color.fromARGB(255, 186, 186, 186),
+                          thickness: 1),
                       const Padding(
                         padding: EdgeInsets.only(
                             top: 5, right: 10, bottom: 5, left: 10),
                         child: Column(
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "You've spent",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color.fromARGB(221, 24, 24, 24)),
-                                ),
-                                Text("left in budget",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color.fromARGB(221, 24, 24, 24)))
-                              ],
-                            )
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("You've spent",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              Color.fromARGB(221, 24, 24, 24))),
+                                  Text("left in budget",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              Color.fromARGB(221, 24, 24, 24)))
+                                ])
                           ],
                         ),
                       ),
@@ -134,15 +132,15 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding:
-                    EdgeInsets.only(top: 10, right: 15, bottom: 0, left: 15),
+                padding: const EdgeInsets.only(
+                    top: 10, right: 15, bottom: 0, left: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                         child:
                             Container()), // Add empty expanded widget to push "Show All" to the right
-                    Text(
+                    const Text(
                       "Show All",
                       style: TextStyle(
                         fontSize: 16,
@@ -154,23 +152,59 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding:
-                    EdgeInsets.only(top: 5, right: 15, bottom: 0, left: 15),
+                padding: const EdgeInsets.only(
+                    top: 5, right: 15, bottom: 0, left: 15),
                 child: Column(
                   children: [
                     // Add a ListView for scrollable list of cards
                     ListView.builder(
                       shrinkWrap: true,
                       physics:
-                          NeverScrollableScrollPhysics(), // Prevents scrolling of the ListView
+                          const NeverScrollableScrollPhysics(), // Prevents scrolling of the ListView
                       itemCount:
                           20, // Replace `yourItemCount` with the actual number of items
                       itemBuilder: (context, index) {
                         // Replace this with your card widget
                         return Card(
-                          child: Padding(padding: 
-                          EdgeInsets.all(20),
-                          child: Text('$index'),),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 5, right: 10, bottom: 5, left: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "- ₹400",
+                                      style: TextStyle(
+                                          fontSize: 30, fontWeight: FontWeight.w400,
+                                          color:
+                                              Color.fromARGB(255, 77, 77, 77)),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 10,
+                                          height: 10,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors
+                                                .blue, // Specify your desired color here
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 5),
+                                          child: Text("Entertainment"),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                 Icon(Icons.delete, color: Color.fromARGB(255, 236, 83, 83),)
+                              ],
+                            ),
+                          ),
                         );
                       },
                     ),
