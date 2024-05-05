@@ -123,16 +123,21 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Padding(
+          const Padding(
             padding:
-                const EdgeInsets.only(top: 10, right: 15, bottom: 0, left: 15),
+                EdgeInsets.only(top: 0, right: 15, bottom: 0, left: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                    child:
-                        Container()), // Add empty expanded widget to push "Show All" to the right
-                const Text(
+                Text(
+                  "Recent Transactions",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color.fromARGB(221, 43, 43, 43),
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                Text(
                   "Show All",
                   style: TextStyle(
                     fontSize: 16,
@@ -143,71 +148,76 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-Expanded(
-  flex: 1,
-  child: Padding(
-    padding: const EdgeInsets.only(top: 5, right: 15, bottom: 0, left: 15),
-    child: SingleChildScrollView( // Wrap with SingleChildScrollView
-      child: Column(
-        children: [
-          // Add a ListView for scrollable list of cards
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(), // Prevents scrolling of the ListView
-            itemCount: 20, // Replace `yourItemCount` with the actual number of items
-            itemBuilder: (context, index) {
-              // Replace this with your card widget
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 5, right: 10, bottom: 5, left: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "- ₹400",
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w400,
-                              color: Color.fromARGB(255, 77, 77, 77),
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(top: 5, right: 15, bottom: 0, left: 15),
+              child: SingleChildScrollView(
+                // Wrap with SingleChildScrollView
+                child: Column(
+                  children: [
+                    // Add a ListView for scrollable list of cards
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics:
+                          const NeverScrollableScrollPhysics(), // Prevents scrolling of the ListView
+                      itemCount:
+                          20, // Replace `yourItemCount` with the actual number of items
+                      itemBuilder: (context, index) {
+                        // Replace this with your card widget
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 5, right: 10, bottom: 5, left: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "- ₹400",
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromARGB(255, 77, 77, 77),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 10,
+                                          height: 10,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors
+                                                .blue, // Specify your desired color here
+                                          ),
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.only(left: 5),
+                                          child: Text("Entertainment"),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const Icon(
+                                  Icons.delete,
+                                  color: Color.fromARGB(255, 236, 83, 83),
+                                )
+                              ],
                             ),
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                width: 10,
-                                height: 10,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.blue, // Specify your desired color here
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 5),
-                                child: Text("Entertainment"),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      const Icon(
-                        Icons.delete,
-                        color: Color.fromARGB(255, 236, 83, 83),
-                      )
-                    ],
-                  ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              );
-            },
+              ),
+            ),
           ),
-        ],
-      ),
-    ),
-  ),
-)
-,
         ],
       ),
     );
