@@ -1,5 +1,8 @@
 import 'package:budgetapp/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+String logo = 'assets/images/logo.svg';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -19,18 +22,30 @@ class _LoadingPageState extends State<LoadingPage> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color.fromARGB(255, 174, 131, 253),
+    return  Scaffold(
+      backgroundColor:  Color(0xFF010304),
       body: Center(
-        child: Text(
-          "Budget App",
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+             SvgPicture.asset(
+              logo,
+              semanticsLabel: 'Penny Logo',
+            ),
+            const SizedBox(height: 20),
+            const Text(
+          "Penny",
           style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.w600,
               color: Color.fromARGB(255, 255, 255, 255)),
         ),
+          ],
+        )
       ),
     );
   }

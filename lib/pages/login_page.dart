@@ -1,150 +1,130 @@
-import 'package:budgetapp/services/storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+String logo = 'assets/images/logo.svg';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final base_Url = dotenv.env['BASE_URL'];
-
-  Future<void> _login() async {
-    print('login click');
-
-    final String username = _usernameController.text;
-    final String password = _passwordController.text;
-
-    // Your API endpoint for login
-    final String apiUrl = '$base_Url/api/login';
-    print('login data: $username $password $apiUrl');
-
-    try {
-      final http.Response response = await http.post(
-        Uri.parse(apiUrl),
-        body: jsonEncode({'email': username, 'password': password}),
-        headers: {'Content-Type': 'application/json'},
-      );
-
-      if (response.statusCode == 200) {
-        // Parse response body
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (responseData['hasError'] == false) {
-          Fluttertoast.showToast(
-            msg: "Login successful",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-          );
-
-          print("login api ${responseData['user']['account_balance']}");
-          StorageService.saveData('user', jsonEncode(responseData['user']));
-          // print("shared ${StorageService.getData('user')}");
-          if (responseData['user']['account_balance'] == 0) {
-            // ignore: use_build_context_synchronously
-            Navigator.pushReplacementNamed(context, '/select_currency');
-
-          } else if((responseData['user']['account_balance'] > 0)){
-
-            Navigator.pushReplacementNamed(context, '/main');
-
-          }
-          
-        } else {
-          print('Login failed: ${responseData['message']}');
-
-          Fluttertoast.showToast(
-            msg: "Login failed: ${responseData['message']}",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-          );
-          // Login failed
-        }
-      } else {
-        // Handle other status codes
-        print('Login failed. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      // Exception occurred during login
-      print('Error occurred during login: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Welcome Back!'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
+      backgroundColor: const Color(0xFF010304),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(labelText: 'Username/Email'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your username or email';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    // Add functionality for forgot password
-                  },
-                  child: Text('Forgot Password?'),
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    print("click login---");
-                    _login();
-                  }
-                },
-                child: Text('Login'),
-              ),
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {
-                    // Navigate to create account page
-                  },
-                  child: Text('Create Account'),
+              SvgPicture.asset(logo, semanticsLabel: 'Penny Logo'),
+              const SizedBox(height: 20),
+              Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Username field
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Username',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                        const SizedBox(height: 5),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF121212),
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(color: Color(0xFF2B2D2E)),
+                          ),
+                          child: TextField(
+                            controller: _usernameController,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'Enter username',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Password field
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Password',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                        const SizedBox(height: 5),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF121212),
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(color: Color(0xFF2B2D2E)),
+                          ),
+                          child: TextField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'Enter password',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Forget Password?',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48.0,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF303234)),
+                        onPressed: () {},
+                        child: const Text('Login',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 15)),
+                      ),
+                    ),
+                                        const SizedBox(height: 20),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                         Text(
+                          'New user? Sign Up',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
             ],
@@ -161,3 +141,5 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 }
+
+void main() => runApp(MaterialApp(home: LoginPage()));

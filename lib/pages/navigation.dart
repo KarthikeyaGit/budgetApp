@@ -44,7 +44,7 @@ class _NavigationState extends State<Navigation> {
       Icons.dashboard_rounded,
       Icons.bar_chart_sharp,
     ];
-    return AnimatedBottomNavigationBar(
+    return AnimatedBottomNavigationBar( 
       icons: iconsItems,
       activeIndex: pageIndex,
       activeColor: Colors.blue.shade600,
