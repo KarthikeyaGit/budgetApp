@@ -1,45 +1,23 @@
-import 'package:budgetapp/pages/get_started.dart';
-import 'package:budgetapp/pages/home_page.dart';
-import 'package:budgetapp/pages/loading_page.dart';
-import 'package:budgetapp/oldPages/login_page_old_2.dart';
-import 'package:budgetapp/pages/navigation.dart';
-import 'package:budgetapp/pages/registrations_page.dart';
-import 'package:budgetapp/pages/select_currency_page.dart';
-import 'package:budgetapp/pages/signup_page.dart';
-import 'package:budgetapp/services/storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:penny/src/routes/app_router.dart';
 
-
-void main() async{
-   await dotenv.load(fileName: ".env");
-   WidgetsFlutterBinding.ensureInitialized();
-  await StorageService.initialize();
+void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 255, 255)),
-        useMaterial3: true,
-      ),
-      routes: {
-        '/': (context) => const LoadingPage(),
-        '/main': (context) => const Navigation(),
-        '/select_currency': (context) => const SelectCurrency(),
-        '/login': (context) => const LoginPage(),
-        '/registration': (context) => const RegistrationPage(),
-        '/dashboard': (context) => const HomePage(),
-        '/signup': (context) => const SignUpPage(),
-        '/getStarted': (context) => const GetStarted()
-      },
+      initialRoute: '/',
+      routes: AppRouter.getRoutes(), // Use the routing logic from AppRouter
     );
   }
 }

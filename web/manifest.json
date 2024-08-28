@@ -1,6 +1,6 @@
 {
-    "name": "budgetapp",
-    "short_name": "budgetapp",
+    "name": "penny",
+    "short_name": "penny",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
