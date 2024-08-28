@@ -113,14 +113,24 @@ class _LoginPageState extends State<LoginPage> {
                                 TextStyle(color: Colors.white, fontSize: 15)),
                       ),
                     ),
-                                        const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                         Text(
-                          'New user? Sign Up',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        const Text(
+                          'New user?',
+                          style:
+                              TextStyle(color: Color(0xFFbababa), fontSize: 16),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/signup');
+                          },
+                          child: const Text(
+                            '  Sign Up',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
                         ),
                       ],
                     )

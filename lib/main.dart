@@ -1,9 +1,11 @@
+import 'package:budgetapp/pages/get_started.dart';
 import 'package:budgetapp/pages/home_page.dart';
 import 'package:budgetapp/pages/loading_page.dart';
-import 'package:budgetapp/pages/login_page.dart';
+import 'package:budgetapp/oldPages/login_page_old_2.dart';
 import 'package:budgetapp/pages/navigation.dart';
 import 'package:budgetapp/pages/registrations_page.dart';
 import 'package:budgetapp/pages/select_currency_page.dart';
+import 'package:budgetapp/pages/signup_page.dart';
 import 'package:budgetapp/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -35,6 +37,8 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/registration': (context) => const RegistrationPage(),
         '/dashboard': (context) => const HomePage(),
+        '/signup': (context) => const SignUpPage(),
+        '/getStarted': (context) => const GetStarted()
       },
     );
   }

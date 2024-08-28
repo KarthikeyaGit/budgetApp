@@ -1,4 +1,5 @@
-import 'package:budgetapp/pages/login_page.dart';
+import 'package:budgetapp/pages/get_started.dart';
+import 'package:budgetapp/oldPages/login_page_old_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -17,7 +18,7 @@ class _LoadingPageState extends State<LoadingPage> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
         Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => const GetStarted()),
       );
     });
   }
