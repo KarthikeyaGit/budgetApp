@@ -26,52 +26,71 @@ class DatabaseHelper {
     );
   }
 
-  Future _onCreate(Database db, int version) async {
-    await db.execute('''
-    CREATE TABLE Users (
-      user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      currency TEXT
-    )
-    ''');
+Future _onCreate(Database db, int version) async {
+  await db.execute('''
+  CREATE TABLE Users (
+    user_id INTEGER PRIMARY KEY,
+    name TEXT,
+    currency TEXT
+  )
+  ''');
 
-    await db.execute('''
-    CREATE TABLE Categories (
-      category_id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER,
-      category_name TEXT,
-      FOREIGN KEY (user_id) REFERENCES Users (user_id)
-    )
-    ''');
+  await db.execute('''
+  CREATE TABLE Categories (
+    category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    category_name TEXT,
+    FOREIGN KEY (user_id) REFERENCES Users (user_id)
+  )
+  ''');
 
-    await db.execute('''
-    CREATE TABLE Transactions (
-      transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER,
-      category_id INTEGER,
-      amount REAL,
-      date TEXT,
-      description TEXT,
-      FOREIGN KEY (user_id) REFERENCES Users (user_id),
-      FOREIGN KEY (category_id) REFERENCES Categories (category_id)
-    )
-    ''');
+  await db.execute('''
+  CREATE TABLE Transactions (
+    transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    category_id INTEGER,
+    amount REAL,
+    date TEXT,
+    description TEXT,
+    FOREIGN KEY (user_id) REFERENCES Users (user_id),
+    FOREIGN KEY (category_id) REFERENCES Categories (category_id)
+  )
+  ''');
 
-    print("Database and tables have been created successfully!");
+  // Insert sample categories
+  List<Map<String, dynamic>> sampleCategories = [
+    {'user_id': null, 'category_name': 'Food'},
+    {'user_id': null, 'category_name': 'Transport'},
+    {'user_id': null, 'category_name': 'Entertainment'},
+    {'user_id': null, 'category_name': 'Utilities'},
+    {'user_id': null, 'category_name': 'Health'},
+  ];
+
+  for (var category in sampleCategories) {
+    await db.insert('Categories', category);
   }
+
+  print("Database and tables have been created successfully with sample categories!");
+}
+
 
   Future<Map<String, dynamic>?> getUserById(int userId) async {
     final db = await database;
-    final List<Map<String, dynamic>> data = await db.rawQuery("SELECT * FROM Users WHERE user_id = ?", [userId]);
-    
+    final List<Map<String, dynamic>> data =
+        await db.rawQuery("SELECT * FROM Users WHERE user_id = ?", [userId]);
+
     if (data.isNotEmpty) {
-      return data.first; 
+      return data.first;
     }
-    return null; 
+    return null;
   }
 
-
-
+  Future createuser(
+      String name, String currency, List<String> categories) async {
+    final db = await database;
+     await db.rawQuery(
+        "insert into Users (user_id, name, currency) values (1, $name, $currency)");
+  }
 
   Future<int> saveUser(String name, String currency) async {
     final db = await database;
@@ -85,24 +104,39 @@ class DatabaseHelper {
     return userId;
   }
 
-  Future updateUser(int id, String name, String currency) async {
+  Future updateUsername(String name, String currency) async {
     final db = await database;
 
     final rowsAffected = await db.update(
       'users',
       {
         'name': name,
-        'currency': currency,
       },
       where: 'user_id = ?',
-      whereArgs: [id],
+      whereArgs: [1],
     );
 
     print("User record updated. Rows affected: $rowsAffected");
-    return rowsAffected; 
+    return rowsAffected;
   }
 
-  Future<void> addCategories(List<String> categories) async {
+    Future updateCurrency(String name, String currency) async {
+    final db = await database;
+
+    final rowsAffected = await db.update(
+      'users',
+      {
+        'currency': currency,
+      },
+      where: 'user_id = ?',
+      whereArgs: [1],
+    );
+
+    print("User record updated. Rows affected: $rowsAffected");
+    return rowsAffected;
+  }
+
+  Future<void> addCategories(List<String> categories, String type) async {
     final db = await database;
 
     for (String category in categories) {
@@ -121,6 +155,6 @@ class DatabaseHelper {
       'Entertainment'
     ];
 
-    await addCategories(defaultCategories);
+    await addCategories(defaultCategories, 'default');
   }
 }
