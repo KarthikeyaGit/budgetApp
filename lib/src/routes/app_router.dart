@@ -1,6 +1,6 @@
 import 'package:penny/src/views/screens/home.dart';
 import 'package:penny/src/views/screens/get_started_.dart';
-import 'package:penny/src/views/screens/select_category.dart';
+import 'package:penny/src/views/screens/category.dart';
 import 'package:penny/src/views/screens/select_currency.dart';
 import 'package:penny/src/views/screens/splash_screen.dart';
 

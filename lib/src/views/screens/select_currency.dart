@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:penny/src/views/screens/select_category.dart';
+import 'package:penny/src/providers/provider.dart';
+import 'package:penny/src/views/screens/category.dart';
+import 'package:provider/provider.dart';
 import '../../models/currency.dart';
 
 class SelectCurrency extends StatefulWidget {
@@ -13,15 +15,16 @@ class SelectCurrency extends StatefulWidget {
 
 class _SelectCurrencyState extends State<SelectCurrency> {
   List<Currency> _currencies = [];
-  List<Currency> _filteredCurrencies = []; // List for filtered currencies
-  String? selectedCurrencyCode; // Variable to store the selected currency code
-  String searchQuery = ''; // Variable to store the search query
+  List<Currency> _filteredCurrencies = [];
+  String? selectedCurrencyCode;
+  String searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _loadCurrencyData();
-  }
+  String username = Provider.of<UserDataNotifier>(context, listen: false).userData.name;
+  print("username in secound page  "+username);  }
 
   Future<void> _loadCurrencyData() async {
     final String response =
@@ -68,6 +71,11 @@ class _SelectCurrencyState extends State<SelectCurrency> {
               width: 100,
               child: FloatingActionButton(
                 onPressed: () {
+                  // saveName(_nameController.text, '');
+
+                    Provider.of<UserDataNotifier>(context, listen: false)
+                  .updateCurrency(selectedCurrencyCode!);
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -146,7 +154,10 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                     onTap: () {
                       setState(() {
                         selectedCurrencyCode =
-                            currency.code; // Capture the selected currency code
+                            currency.code; 
+                  //                Provider.of<UserDataNotifier>(context, listen: false)
+                  // .updateName(currency.code);
+
                       });
                     },
                     child: Card(

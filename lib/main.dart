@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:penny/src/providers/provider.dart';
 import 'package:penny/src/routes/app_router.dart';
 import 'package:penny/src/services/database_healper.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-
-
-  runApp(const MyApp());
+  runApp(  MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserDataNotifier()),
+      ],
+      child: MyApp(),
+    ),);
 }
 
 class MyApp extends StatefulWidget {
@@ -17,9 +21,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   late DatabaseHelper dbHelper;
- @override
+  @override
   void initState() {
     super.initState();
     dbHelper = DatabaseHelper();

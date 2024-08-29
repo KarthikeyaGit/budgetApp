@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:penny/src/providers/provider.dart';
+import 'package:provider/provider.dart';
 
 String logo = 'assets/images/logo.svg';
 
@@ -14,6 +16,19 @@ class _HomeScreenState extends State<HomeScreen> {
   // Define controllers to capture input from TextFields
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+          String name = Provider.of<UserDataNotifier>(context, listen: false).userData.name;
+
+      String selectedCurrency = Provider.of<UserDataNotifier>(context, listen: false).userData.selectedCurrency;
+
+      List categories = Provider.of<UserDataNotifier>(context, listen: false).userData.categories;
+      print("categories: $name $selectedCurrency $categories ");
+  }
 
   @override
   Widget build(BuildContext context) {

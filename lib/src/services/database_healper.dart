@@ -16,6 +16,7 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
+    // ignore: avoid_print
     print("_initDatabase");
     String path = join(await getDatabasesPath(), 'budget_app.db');
     return await openDatabase(
@@ -56,7 +57,6 @@ class DatabaseHelper {
     )
     ''');
 
-    // Print a message to the console when the database is created
     print("Database and tables have been created successfully!");
   }
 
@@ -65,29 +65,29 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> data = await db.rawQuery("SELECT * FROM Users WHERE user_id = ?", [userId]);
     
     if (data.isNotEmpty) {
-      return data.first; // Return the first user found
+      return data.first; 
     }
-    return null; // Return null if no user found
+    return null; 
   }
 
-  // Method to save or update user information (name and currency)
+
+
+
   Future<int> saveUser(String name, String currency) async {
     final db = await database;
 
-    // Insert a new user record
     final userId = await db.insert('users', {
       'name': name,
       'currency': currency,
     });
 
     print("User record added successfully with ID: $userId");
-    return userId; // Return the newly inserted user ID
+    return userId;
   }
 
-  Future<int> updateUser(int id, String name, String currency) async {
+  Future updateUser(int id, String name, String currency) async {
     final db = await database;
 
-    // Update the user record
     final rowsAffected = await db.update(
       'users',
       {
@@ -99,10 +99,9 @@ class DatabaseHelper {
     );
 
     print("User record updated. Rows affected: $rowsAffected");
-    return rowsAffected; // Return the number of rows affected
+    return rowsAffected; 
   }
 
-  // Method to add categories (with some default categories)
   Future<void> addCategories(List<String> categories) async {
     final db = await database;
 
@@ -113,7 +112,6 @@ class DatabaseHelper {
     print("Categories added successfully!");
   }
 
-  // Method to add default categories
   Future<void> addDefaultCategories() async {
     List<String> defaultCategories = [
       'Groceries',

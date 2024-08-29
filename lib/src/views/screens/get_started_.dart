@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:penny/src/providers/provider.dart';
 import 'package:penny/src/services/database_healper.dart';
 import 'package:penny/src/views/screens/select_currency.dart';
-import 'package:penny/src/shared/shared.dart';
+import 'package:provider/provider.dart';
 
 String logo = 'assets/images/logo.svg';
 
@@ -16,7 +17,6 @@ class GetStarted extends StatefulWidget {
 }
 
 class _GetStartedState extends State<GetStarted> {
-  final preferencesService = Shared();
   final TextEditingController _nameController = TextEditingController();
   bool _showButton = false;
 
@@ -29,63 +29,19 @@ class _GetStartedState extends State<GetStarted> {
     _loadUsername();
   }
 
-  getUserId() async   {
-  String? userIdString = await preferencesService.get('uid'); // Assuming get method is implemented
-  int? userId = userIdString != null ? int.tryParse(userIdString) : null;
-  return userId;
-  }
-
-  
-  Future<void> saveName(String name, String currency) async {
-  // Retrieve the user ID from SharedPreferences
-  var userId = await getUserId();
-
-  if (userId != null) {
-      print("id ${userId}");
-
-    // If the user ID exists, update the user
-    await dh.updateUser(userId, name, currency);
-    print("User with ID $userId updated successfully.");
-  } else {
-    // If the user does not exist, save a new user and get the new ID
-    int id = await dh.saveUser(name, currency);
-    print("New user record added with ID: $id");
-    // Save the new ID to SharedPreferences
-    preferencesService.save('uid', id.toString());
-  }
-}
 
 
   void _checkNameLength() {
-
     setState(() {
       _showButton = _nameController.text.length > 3;
     });
   }
 
   Future<void> _loadUsername() async {
-    // Fetch the username using PreferencesService
-    // Await the result of getUserId
-  int? uid = await getUserId(); // Ensure you await this call
-
-  if (uid != null) {
-    // Only fetch user data if uid is not null
-    var data = await dh.getUserById(uid);
-    print("data: $data");
-    if(data != null){
-     String userName = data['name'];
-   setState(() {
-      _nameController.text =
-          userName ?? ''; // Assign the username to the controller
-    });
-    }
-  } else {
-    print("User ID not found.");
-  }
-
-
-   
-  }
+  String username = Provider.of<UserDataNotifier>(context, listen: false).userData.name;
+  print("old "+username);
+  _nameController.text = username;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +53,8 @@ class _GetStartedState extends State<GetStarted> {
               width: 100,
               child: FloatingActionButton(
                 onPressed: () {
-                  saveName(_nameController.text,'');
+                   Provider.of<UserDataNotifier>(context, listen: false)
+                  .updateName(_nameController.text);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
