@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:penny/src/services/database_healper.dart';
 import 'package:penny/src/views/screens/select_currency.dart';
 import 'package:penny/src/shared/shared.dart';
 
@@ -19,20 +20,44 @@ class _GetStartedState extends State<GetStarted> {
   final TextEditingController _nameController = TextEditingController();
   bool _showButton = false;
 
+  var dh = DatabaseHelper();
 
   @override
   void initState() {
     super.initState();
-        _nameController.addListener(_checkNameLength);
-         _loadUsername();
-
-   
+    _nameController.addListener(_checkNameLength);
+    _loadUsername();
   }
 
-    void _checkNameLength() {
-      if(_nameController.text.length > 2){
-        preferencesService.save('username', _nameController.text);
-      }
+  getUserId() async   {
+  String? userIdString = await preferencesService.get('uid'); // Assuming get method is implemented
+  int? userId = userIdString != null ? int.tryParse(userIdString) : null;
+  return userId;
+  }
+
+  
+  Future<void> saveName(String name, String currency) async {
+  // Retrieve the user ID from SharedPreferences
+  var userId = await getUserId();
+
+  if (userId != null) {
+      print("id ${userId}");
+
+    // If the user ID exists, update the user
+    await dh.updateUser(userId, name, currency);
+    print("User with ID $userId updated successfully.");
+  } else {
+    // If the user does not exist, save a new user and get the new ID
+    int id = await dh.saveUser(name, currency);
+    print("New user record added with ID: $id");
+    // Save the new ID to SharedPreferences
+    preferencesService.save('uid', id.toString());
+  }
+}
+
+
+  void _checkNameLength() {
+
     setState(() {
       _showButton = _nameController.text.length > 3;
     });
@@ -40,11 +65,26 @@ class _GetStartedState extends State<GetStarted> {
 
   Future<void> _loadUsername() async {
     // Fetch the username using PreferencesService
-    String? uname= await preferencesService.get('username');
-    print("uname $uname");
-    setState(() {
-      _nameController.text = uname ?? ''; // Assign the username to the controller
+    // Await the result of getUserId
+  int? uid = await getUserId(); // Ensure you await this call
+
+  if (uid != null) {
+    // Only fetch user data if uid is not null
+    var data = await dh.getUserById(uid);
+    print("data: $data");
+    if(data != null){
+     String userName = data['name'];
+   setState(() {
+      _nameController.text =
+          userName ?? ''; // Assign the username to the controller
     });
+    }
+  } else {
+    print("User ID not found.");
+  }
+
+
+   
   }
 
   @override
@@ -52,28 +92,35 @@ class _GetStartedState extends State<GetStarted> {
     return Scaffold(
       backgroundColor: const Color(0xFF010304),
       body: _buildPage1(),
-      floatingActionButton: _showButton ? SizedBox(
-        width: 100,
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => SelectCurrency()));
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Next",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+      floatingActionButton: _showButton
+          ? SizedBox(
+              width: 100,
+              child: FloatingActionButton(
+                onPressed: () {
+                  saveName(_nameController.text,'');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelectCurrency()));
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Next",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                    ),
+                    SizedBox(width: 7),
+                    Icon(
+                      Icons.arrow_forward_outlined,
+                      size: 22.0,
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(width: 7),
-              Icon(
-                Icons.arrow_forward_outlined,
-                size: 22.0,
-              ),
-            ],
-          ),
-        ),
-      ): null,
+            )
+          : null,
     );
   }
 
