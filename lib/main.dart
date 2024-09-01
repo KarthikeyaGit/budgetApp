@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:penny/src/providers/provider.dart';
+import 'package:penny/src/providers/category.dart';
+import 'package:penny/src/providers/user.dart';
 import 'package:penny/src/routes/app_router.dart';
 import 'package:penny/src/services/database_healper.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(  MultiProvider(
+  runApp(
+    MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserDataNotifier()),
+        ChangeNotifierProvider(create: (_) => UserNotifier()),
+        ChangeNotifierProvider(create: (_) => CategoryNotifier()),
       ],
       child: MyApp(),
-    ),);
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -30,14 +34,14 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _initializeDatabase() async {
-    await dbHelper.database; // This triggers the database initialization
+    await dbHelper.database;
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: '/',
-      routes: AppRouter.getRoutes(), // Use the routing logic from AppRouter
+      routes: AppRouter.getRoutes(),
     );
   }
 }

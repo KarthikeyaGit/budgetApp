@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:penny/src/providers/provider.dart';
+import 'package:penny/src/models/user.dart';
+import 'package:penny/src/providers/user.dart';
 import 'package:penny/src/views/screens/category.dart';
 import 'package:provider/provider.dart';
 import '../../models/currency.dart';
@@ -23,8 +24,9 @@ class _SelectCurrencyState extends State<SelectCurrency> {
   void initState() {
     super.initState();
     _loadCurrencyData();
-  String username = Provider.of<UserDataNotifier>(context, listen: false).userData.name;
-  print("username in secound page  "+username);  }
+  String username = Provider.of<UserNotifier>(context, listen: false).user.name;
+  print("username in secound page  "+username); 
+   }
 
   Future<void> _loadCurrencyData() async {
     final String response =
@@ -73,7 +75,7 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                 onPressed: () {
                   // saveName(_nameController.text, '');
 
-                    Provider.of<UserDataNotifier>(context, listen: false)
+                    Provider.of<UserNotifier>(context, listen: false)
                   .updateCurrency(selectedCurrencyCode!);
 
                   Navigator.push(

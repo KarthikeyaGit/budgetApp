@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:penny/src/providers/provider.dart';
+import 'package:penny/src/providers/category.dart';
+import 'package:penny/src/providers/user.dart';
 import 'package:provider/provider.dart';
 
 String logo = 'assets/images/logo.svg';
@@ -22,11 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-          String name = Provider.of<UserDataNotifier>(context, listen: false).userData.name;
+          String name = Provider.of<UserNotifier>(context, listen: false).user.name;
 
-      String selectedCurrency = Provider.of<UserDataNotifier>(context, listen: false).userData.selectedCurrency;
+      String selectedCurrency = Provider.of<UserNotifier>(context, listen: false).user.currency;
 
-      List categories = Provider.of<UserDataNotifier>(context, listen: false).userData.categories;
+      List categories = Provider.of<CategoryNotifier>(context, listen: false).categories;
       print("categories: $name $selectedCurrency $categories ");
   }
 
@@ -34,96 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF010304),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              logo,
-              semanticsLabel: 'Penny Logo',
-              height: 70,
-            ), 
-            const SizedBox(height: 30),
-            // Username Input Field
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextField(
-                controller: _usernameController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Enter username',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: const Color(0xFF1C1E1F),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Password Input Field
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextField(
-                controller: _passwordController,
-                style: const TextStyle(color: Colors.white),
-                obscureText: true, // Hide password input
-                decoration: InputDecoration(
-                  labelText: 'Enter password',
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  filled: true,
-                  fillColor: const Color(0xFF1C1E1F),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Forgot Password Text
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 30),
-                child: TextButton(
-                  onPressed: () {
-                    // Handle "Forgot Password" logic
-                  },
-                  child: const Text(
-                    'Forgot Password?',
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            // Login Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle login logic
-                  String username = _usernameController.text;
-                  String password = _passwordController.text;
-                  print('Username: $username, Password: $password');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF303234),
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 16),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: Center(),
     );
   }
 

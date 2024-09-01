@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:penny/src/providers/provider.dart';
+import 'package:penny/src/providers/user.dart';
 import 'package:penny/src/services/database_healper.dart';
 import 'package:penny/src/views/screens/select_currency.dart';
 import 'package:provider/provider.dart';
@@ -38,8 +38,8 @@ class _GetStartedState extends State<GetStarted> {
   }
 
   Future<void> _loadUsername() async {
-  String username = Provider.of<UserDataNotifier>(context, listen: false).userData.name;
-  print("old "+username);
+  String username = Provider.of<UserNotifier>(context, listen: false).user.name;
+  // print("old "+username);
   _nameController.text = username;
 }
 
@@ -53,7 +53,7 @@ class _GetStartedState extends State<GetStarted> {
               width: 100,
               child: FloatingActionButton(
                 onPressed: () {
-                   Provider.of<UserDataNotifier>(context, listen: false)
+                   Provider.of<UserNotifier>(context, listen: false)
                   .updateName(_nameController.text);
                   Navigator.push(
                       context,
