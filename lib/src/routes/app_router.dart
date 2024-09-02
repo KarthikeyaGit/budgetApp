@@ -1,3 +1,5 @@
+import 'package:penny/src/views/screens/accounts.dart';
+import 'package:penny/src/views/screens/add_accounts.dart';
 import 'package:penny/src/views/screens/home.dart';
 import 'package:penny/src/views/screens/get_started_.dart';
 import 'package:penny/src/views/screens/category.dart';
@@ -11,8 +13,9 @@ class AppRouter {
       '/getStarted': (context) => const GetStarted(),
       '/home': (context) => const HomeScreen(),
       '/selectCategory': (context) => const SelectCategory(),
-      '/selectCurrency': (context) => const SelectCurrency()
-
+      '/selectCurrency': (context) => const SelectCurrency(),
+      '/accounts': (context) => const Accounts(),
+      'addAccounts': (context) => const AddAccounts()
     };
   }
 }

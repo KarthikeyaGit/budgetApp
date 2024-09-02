@@ -1,3 +1,4 @@
+import 'package:penny/src/models/accounts.dart';
 import 'package:penny/src/models/category.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -27,9 +28,9 @@ class DatabaseHelper {
     );
   }
 
-Future _onCreate(Database db, int version) async {
-  // Create Users table
-  await db.execute('''
+  Future _onCreate(Database db, int version) async {
+    // Create Users table
+    await db.execute('''
     CREATE TABLE Users (
       user_id INTEGER PRIMARY KEY,
       name TEXT,
@@ -37,8 +38,8 @@ Future _onCreate(Database db, int version) async {
     )
   ''');
 
-  // Create Categories table
-  await db.execute('''
+    // Create Categories table
+    await db.execute('''
     CREATE TABLE Categories (
       category_id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER,
@@ -48,8 +49,8 @@ Future _onCreate(Database db, int version) async {
     )
   ''');
 
-  // Create Accounts table
-  await db.execute('''
+    // Create Accounts table
+    await db.execute('''
     CREATE TABLE Accounts (
       account_id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER,
@@ -61,8 +62,8 @@ Future _onCreate(Database db, int version) async {
     )
   ''');
 
-  // Create Transactions table
-  await db.execute('''
+    // Create Transactions table
+    await db.execute('''
     CREATE TABLE Transactions (
       transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER,
@@ -77,22 +78,22 @@ Future _onCreate(Database db, int version) async {
     )
   ''');
 
-  // Insert sample categories
-  List<Map<String, dynamic>> sampleCategories = [
-    {'user_id': 1, 'category_name': 'Food'},
-    {'user_id': 1, 'category_name': 'Transport'},
-    {'user_id': 1, 'category_name': 'Entertainment'},
-    {'user_id': 1, 'category_name': 'Utilities'},
-    {'user_id': 1, 'category_name': 'Health'},
-  ];
+    // Insert sample categories
+    List<Map<String, dynamic>> sampleCategories = [
+      {'user_id': 1, 'category_name': 'Food'},
+      {'user_id': 1, 'category_name': 'Transport'},
+      {'user_id': 1, 'category_name': 'Entertainment'},
+      {'user_id': 1, 'category_name': 'Utilities'},
+      {'user_id': 1, 'category_name': 'Health'},
+    ];
 
-  for (var category in sampleCategories) {
-    await db.insert('Categories', category);
+    for (var category in sampleCategories) {
+      await db.insert('Categories', category);
+    }
+
+    print(
+        "Database and tables have been created successfully with sample categories and accounts!");
   }
-
-  print("Database and tables have been created successfully with sample categories and accounts!");
-}
-
 
   Future<Map<String, dynamic>?> getUserById(int userId) async {
     final db = await database;
@@ -168,21 +169,14 @@ Future _onCreate(Database db, int version) async {
       final db = await database;
 
       // Insert the category into the database and get the new category ID
-      int id = await db.insert('Categories', {
-        'category_name': category,
-        'user_id': 1,
-        'default_type': 0
-      });
+      int id = await db.insert('Categories',
+          {'category_name': category, 'user_id': 1, 'default_type': 0});
 
       print("Inserted category id: $id");
 
       // Create a Category object with the inserted data
       return Category(
-        categoryId: id,
-        userId: 1,
-        categoryName: category,
-        defaultType: 0
-      );
+          categoryId: id, userId: 1, categoryName: category, defaultType: 0);
     } catch (e) {
       print("Error inserting category: $e");
       // Handle the error case (you might return a null or throw an error)
@@ -228,5 +222,41 @@ Future _onCreate(Database db, int version) async {
     ];
 
     await addCategories(defaultCategories, 'default');
+  }
+
+
+  getAccounts() async {
+    final db = await database;
+    List accounts =
+        await db.rawQuery('select * from Accounts where user_id = 1');
+
+        print("aacounts --- $accounts");
+    return accounts;
+  }
+
+
+
+  Future<int> insertAccount(Account account) async {
+    final db = await database;
+    return await db.insert('Accounts', account.toMap());
+  }
+
+  Future<int> updateAccount(Account account) async {
+    final db = await database;
+    return await db.update(
+      'Accounts',
+      account.toMap(),
+      where: 'account_id = ?',
+      whereArgs: [account.accountId], 
+    );
+  }
+
+  Future<int> deleteAccount(int accountId) async {
+    final db = await database;
+    return await db.delete(
+      'Accounts',
+      where: 'account_id = ?', 
+      whereArgs: [accountId], 
+    );
   }
 }

@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:penny/src/models/user.dart';
 import 'package:penny/src/providers/user.dart';
-import 'package:penny/src/views/screens/category.dart';
+import 'package:penny/src/views/screens/accounts.dart';
 import 'package:provider/provider.dart';
 import '../../models/currency.dart';
 
@@ -24,9 +23,10 @@ class _SelectCurrencyState extends State<SelectCurrency> {
   void initState() {
     super.initState();
     _loadCurrencyData();
-  String username = Provider.of<UserNotifier>(context, listen: false).user.name;
-  print("username in secound page  "+username); 
-   }
+    String username =
+        Provider.of<UserNotifier>(context, listen: false).user.name;
+    print("username in secound page  " + username);
+  }
 
   Future<void> _loadCurrencyData() async {
     final String response =
@@ -59,7 +59,7 @@ class _SelectCurrencyState extends State<SelectCurrency> {
   Widget _buildPage2() {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 40,
+        // toolbarHeight: 40,
         automaticallyImplyLeading: false,
         title: const Text(
           'Select Currency',
@@ -75,13 +75,11 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                 onPressed: () {
                   // saveName(_nameController.text, '');
 
-                    Provider.of<UserNotifier>(context, listen: false)
-                  .updateCurrency(selectedCurrencyCode!);
+                  Provider.of<UserNotifier>(context, listen: false)
+                      .updateCurrency(selectedCurrencyCode!);
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SelectCategory()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Accounts()));
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -111,23 +109,36 @@ class _SelectCurrencyState extends State<SelectCurrency> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search bar
             TextField(
               decoration: const InputDecoration(
                 hintText: 'Search',
                 hintStyle: TextStyle(color: Color(0xFFD7D7D7)),
                 prefixIcon: Icon(Icons.search, color: Color(0xFFD7D7D7)),
-                filled: false,
-                fillColor: Color.fromARGB(255, 27, 27, 27),
+                filled: true, // Enable the filled color
+                fillColor:
+                    Color.fromARGB(255, 33, 33, 33), // Set the background color to grey
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide.none,
+                  borderSide: BorderSide(
+                    color:
+                        Color(0xFFD7D7D7), // Set the border color to light grey
+                    width: .5, // Adjust the width of the border
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide(
+                    color: Color(
+                        0xFFD7D7D7), // Same light grey border for the focused state
+                    width: .5,
+                  ),
                 ),
               ),
-              style: TextStyle(color: Colors.white), // Add this line
+              style: const TextStyle(color: Colors.white), // Text color
               onChanged:
                   _filterCurrencies, // Call filter function on input change
             ),
+
             const SizedBox(height: 20),
 
             // Display selected currency
@@ -155,11 +166,9 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        selectedCurrencyCode =
-                            currency.code; 
-                  //                Provider.of<UserDataNotifier>(context, listen: false)
-                  // .updateName(currency.code);
-
+                        selectedCurrencyCode = currency.code;
+                        //                Provider.of<UserDataNotifier>(context, listen: false)
+                        // .updateName(currency.code);
                       });
                     },
                     child: Card(

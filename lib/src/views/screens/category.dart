@@ -35,9 +35,8 @@ class _SelectCategoryState extends State<SelectCategory> {
         await DatabaseHelper().getCategories();
 
     setState(() {
-      categories =
-          fetchedCategories.map((map) => Category.fromMap(map)).toList();
-      print("data $categories");
+      categories = fetchedCategories.map((map) => Category.fromMap(map)).toList();
+          print("data $categories");
     });
   }
 
