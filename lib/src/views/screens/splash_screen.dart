@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:penny/src/routes/app_router.dart';
 import 'package:penny/src/views/screens/get_started_.dart';
+import 'package:penny/src/views/screens/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String logo = 'assets/images/logo.svg';
 
@@ -20,11 +23,34 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(const Duration(seconds: 2), () {
+
+         _checkOnboardingComplete();
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => GetStarted()),
+      // );
+              // _checkOnboardingComplete();
+
+    });
+  }
+
+
+  Future<void> _checkOnboardingComplete() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? isComplete = prefs.getBool('isSetupComplete');
+    print("iscomplete $isComplete");
+    if (isComplete == true) {
       Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } else {
+
+        Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => GetStarted()),
       );
-    });
+    }
   }
 
   @override

@@ -26,7 +26,7 @@ class _GetStartedState extends State<GetStarted> {
   void initState() {
     super.initState();
     _nameController.addListener(_checkNameLength);
-    _loadUsername();
+    // _loadUsername();
   }
 
 
@@ -37,11 +37,11 @@ class _GetStartedState extends State<GetStarted> {
     });
   }
 
-  Future<void> _loadUsername() async {
-  String username = Provider.of<UserNotifier>(context, listen: false).user.name;
+  // Future<void> _loadUsername() async {
+  // String username = Provider.of<UserNotifier>(context, listen: false).user.name;
   // print("old "+username);
-  _nameController.text = username;
-}
+  // _nameController.text = username;
+// }
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +53,15 @@ class _GetStartedState extends State<GetStarted> {
               width: 100,
               child: FloatingActionButton(
                 onPressed: () {
-                   Provider.of<UserNotifier>(context, listen: false)
-                  .updateName(_nameController.text);
+                  //  Provider.of<UserNotifier>(context, listen: false)
+                  // .updateName(_nameController.text);
+
+                  DatabaseHelper().saveName(_nameController.text);
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SelectCurrency()));
+                          builder: (context) => const SelectCurrency()));
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,

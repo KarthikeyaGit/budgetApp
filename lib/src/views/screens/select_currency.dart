@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:penny/src/providers/user.dart';
+import 'package:penny/src/services/database_healper.dart';
 import 'package:penny/src/views/screens/accounts.dart';
 import 'package:provider/provider.dart';
 import '../../models/currency.dart';
@@ -75,9 +76,9 @@ class _SelectCurrencyState extends State<SelectCurrency> {
                 onPressed: () {
                   // saveName(_nameController.text, '');
 
-                  Provider.of<UserNotifier>(context, listen: false)
-                      .updateCurrency(selectedCurrencyCode!);
-
+                  // Provider.of<UserNotifier>(context, listen: false)
+                  //     .updateCurrency(selectedCurrencyCode!);
+                  DatabaseHelper().saveCurrency(selectedCurrencyCode);
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Accounts()));
                 },

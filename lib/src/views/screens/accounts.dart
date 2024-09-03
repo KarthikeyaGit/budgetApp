@@ -139,6 +139,7 @@ class _AccountsState extends State<Accounts> {
   }
 
   Widget accountCardItem(account) {
+    //TODO: add the ability to edit account
     return Card(
       color: const Color(0xFF151718),
       shape: RoundedRectangleBorder(

@@ -4,6 +4,7 @@ import 'package:penny/src/providers/user.dart';
 import 'package:penny/src/services/database_healper.dart';
 import 'package:penny/src/views/screens/home.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectCategory extends StatefulWidget {
   final bool userExists;
@@ -35,8 +36,9 @@ class _SelectCategoryState extends State<SelectCategory> {
         await DatabaseHelper().getCategories();
 
     setState(() {
-      categories = fetchedCategories.map((map) => Category.fromMap(map)).toList();
-          print("data $categories");
+      categories =
+          fetchedCategories.map((map) => Category.fromMap(map)).toList();
+      print("data $categories");
     });
   }
 
@@ -140,16 +142,27 @@ class _SelectCategoryState extends State<SelectCategory> {
         floatingActionButton: SizedBox(
           width: 100,
           child: FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    // Show the dialog box
-                    return DialogBox();
-                  });
+            onPressed: () async {
+              // showDialog(
+              //     context: context,
+              //     builder: (BuildContext context) {
+              //       return DialogBox();
+              //     });
 
               // Navigator.push(context,
               //     MaterialPageRoute(builder: (context) => HomeScreen()));
+
+              //               Navigator.pushReplacement(context,
+              // MaterialPageRoute(builder: (context) => HomeScreen()));
+
+              final SharedPreferencesAsync prefs = SharedPreferencesAsync();
+              await prefs.setBool('isSetupComplete', true);
+
+                  bool? isComplete = await prefs.getBool('isSetupComplete');
+               print("iscomplete--- $isComplete");
+
+              Navigator.pushNamedAndRemoveUntil(
+                  context, "/home", (Route<dynamic> route) => false);
             },
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,

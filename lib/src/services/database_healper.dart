@@ -6,21 +6,22 @@ import 'package:path/path.dart';
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   factory DatabaseHelper() => _instance;
-
   DatabaseHelper._internal();
 
   static Database? _database;
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
+    print("_database $_database");
+    // if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
-  Future<Database> _initDatabase() async {
+   _initDatabase() async {
     // ignore: avoid_print
     print("_initDatabase");
     String path = join(await getDatabasesPath(), 'budget_app.db');
+    print("path: $path");
     return await openDatabase(
       path,
       version: 1,
@@ -31,52 +32,52 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     // Create Users table
     await db.execute('''
-    CREATE TABLE Users (
-      user_id INTEGER PRIMARY KEY,
-      name TEXT,
-      currency TEXT
-    )
-  ''');
+      CREATE TABLE Users (
+        user_id INTEGER PRIMARY KEY,
+        name TEXT,
+        currency TEXT
+      )
+    ''');
 
     // Create Categories table
     await db.execute('''
-    CREATE TABLE Categories (
-      category_id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER,
-      category_name TEXT,
-      default_type INTEGER, 
-      FOREIGN KEY (user_id) REFERENCES Users (user_id)
-    )
-  ''');
+      CREATE TABLE Categories (
+        category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        category_name TEXT,
+        default_type INTEGER, 
+        FOREIGN KEY (user_id) REFERENCES Users (user_id)
+      )
+    ''');
 
     // Create Accounts table
     await db.execute('''
-    CREATE TABLE Accounts (
-      account_id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER,
-      account_name TEXT,
-      account_type TEXT,   -- e.g., 'Credit', 'Debit', 'Cash'
-      balance REAL DEFAULT 0.0,  -- The current balance in the account
-      used INTEGER DEFAULT 0, -- 0 for unused, 1 for used
-      FOREIGN KEY (user_id) REFERENCES Users (user_id)
-    )
-  ''');
+      CREATE TABLE Accounts (
+        account_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        account_name TEXT,
+        account_type TEXT,   -- e.g., 'Credit', 'Debit', 'Cash'
+        balance REAL DEFAULT 0.0,  -- The current balance in the account
+        used INTEGER DEFAULT 0, -- 0 for unused, 1 for used
+        FOREIGN KEY (user_id) REFERENCES Users (user_id)
+      )
+    ''');
 
     // Create Transactions table
     await db.execute('''
-    CREATE TABLE Transactions (
-      transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER,
-      category_id INTEGER,
-      account_id INTEGER,  -- Added to link transactions to an account
-      amount REAL,
-      date TEXT,
-      description TEXT,
-      FOREIGN KEY (user_id) REFERENCES Users (user_id),
-      FOREIGN KEY (category_id) REFERENCES Categories (category_id),
-      FOREIGN KEY (account_id) REFERENCES Accounts (account_id)
-    )
-  ''');
+      CREATE TABLE Transactions (
+        transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        category_id INTEGER,
+        account_id INTEGER,  -- Added to link transactions to an account
+        amount REAL,
+        date TEXT,
+        description TEXT,
+        FOREIGN KEY (user_id) REFERENCES Users (user_id),
+        FOREIGN KEY (category_id) REFERENCES Categories (category_id),
+        FOREIGN KEY (account_id) REFERENCES Accounts (account_id)
+      )
+    ''');
 
     // Insert sample categories
     List<Map<String, dynamic>> sampleCategories = [
@@ -91,11 +92,45 @@ class DatabaseHelper {
       await db.insert('Categories', category);
     }
 
-    print(
-        "Database and tables have been created successfully with sample categories and accounts!");
+    print("Database and tables have been created successfully with sample categories and accounts!");
   }
 
-  Future<Map<String, dynamic>?> getUserById(int userId) async {
+  // User-related methods
+  Future<void> saveName(String name) async {
+    final db = await database;
+
+    var result = await db.query(
+      'Users',
+      where: 'user_id = ?',
+      whereArgs: [1],
+    );
+
+    if (result.isNotEmpty) {
+      await db.update(
+        'Users',
+        {'name': name},
+        where: 'user_id = ?',
+        whereArgs: [1],
+      );
+    } else {
+      await db.insert(
+        'Users',
+        {'user_id': 1, 'name': name, 'currency': ''},
+      );
+    }
+  }
+
+  Future<void> saveCurrency(String? currency) async {
+    final db = await database;
+    db.update(
+      'Users',
+      {'currency': currency},
+      where: 'user_id = ?',
+      whereArgs: [1],
+    );
+  }
+
+  Future<Map<String, dynamic>> getUserById(int userId) async {
     final db = await database;
     final List<Map<String, dynamic>> data =
         await db.rawQuery("SELECT * FROM Users WHERE user_id = ?", [userId]);
@@ -103,15 +138,14 @@ class DatabaseHelper {
     if (data.isNotEmpty) {
       return data.first;
     }
-    return null;
+    return {};
   }
 
-  Future createuser(
-      String name, String currency, List<String> categories) async {
-    final db = await database;
-    await db.rawQuery(
-        "insert into Users (user_id, name, currency) values (1, $name, $currency)");
-  }
+  // Future<void> createuser(String name, String currency, List<String> categories) async {
+  //   final db = await database;
+  //   await db.rawQuery(
+  //       "insert into Users (user_id, name, currency) values (1, $name, $currency)");
+  // }
 
   Future<int> saveUser(String name, String currency) async {
     final db = await database;
@@ -125,7 +159,7 @@ class DatabaseHelper {
     return userId;
   }
 
-  Future updateUsername(String name, String currency) async {
+  Future<int> updateUsername(String name, String currency) async {
     final db = await database;
 
     final rowsAffected = await db.update(
@@ -141,7 +175,7 @@ class DatabaseHelper {
     return rowsAffected;
   }
 
-  Future updateCurrency(String name, String currency) async {
+  Future<int> updateCurrency(String name, String currency) async {
     final db = await database;
 
     final rowsAffected = await db.update(
@@ -157,9 +191,10 @@ class DatabaseHelper {
     return rowsAffected;
   }
 
-  getCategories() async {
+  // Category-related methods
+  Future<List<Map<String, dynamic>>> getCategories() async {
     final db = await database;
-    List categories =
+    List<Map<String, dynamic>> categories =
         await db.rawQuery('select * from Categories where user_id = 1');
     return categories;
   }
@@ -168,18 +203,15 @@ class DatabaseHelper {
     try {
       final db = await database;
 
-      // Insert the category into the database and get the new category ID
       int id = await db.insert('Categories',
           {'category_name': category, 'user_id': 1, 'default_type': 0});
 
       print("Inserted category id: $id");
 
-      // Create a Category object with the inserted data
       return Category(
           categoryId: id, userId: 1, categoryName: category, defaultType: 0);
     } catch (e) {
       print("Error inserting category: $e");
-      // Handle the error case (you might return a null or throw an error)
       throw Exception("Failed to insert category: $e");
     }
   }
@@ -187,16 +219,16 @@ class DatabaseHelper {
   Future<void> removeCategory(int id) async {
     print("id $id");
     try {
-      final db = await database; // Get the database instance
+      final db = await database;
       int result = await db.delete(
-        'Categories', // The table to delete from
-        where: 'category_id = ?', // The condition for deletion
-        whereArgs: [id], // The ID of the category to delete
+        'Categories',
+        where: 'category_id = ?',
+        whereArgs: [id],
       );
 
-      print("Deleted category id: $id, result: $result"); // Log the result
+      print("Deleted category id: $id, result: $result");
     } catch (e) {
-      print("Error deleting category: $e"); // Log any error
+      print("Error deleting category: $e");
     }
   }
 
@@ -224,17 +256,15 @@ class DatabaseHelper {
     await addCategories(defaultCategories, 'default');
   }
 
-
-  getAccounts() async {
+  // Account-related methods
+  Future<List<Map<String, dynamic>>> getAccounts() async {
     final db = await database;
-    List accounts =
+    List<Map<String, dynamic>> accounts =
         await db.rawQuery('select * from Accounts where user_id = 1');
 
-        print("aacounts --- $accounts");
+    print("Accounts --- $accounts");
     return accounts;
   }
-
-
 
   Future<int> insertAccount(Account account) async {
     final db = await database;
@@ -247,7 +277,7 @@ class DatabaseHelper {
       'Accounts',
       account.toMap(),
       where: 'account_id = ?',
-      whereArgs: [account.accountId], 
+      whereArgs: [account.accountId],
     );
   }
 
@@ -255,8 +285,8 @@ class DatabaseHelper {
     final db = await database;
     return await db.delete(
       'Accounts',
-      where: 'account_id = ?', 
-      whereArgs: [accountId], 
+      where: 'account_id = ?',
+      whereArgs: [accountId],
     );
   }
 }
