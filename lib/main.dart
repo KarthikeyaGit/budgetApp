@@ -6,22 +6,36 @@ import 'package:penny/src/services/database_healper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+Future<void> saveLoginStatus(bool isLoggedIn) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('isLoggedIn', isLoggedIn);
+}
+
+Future<bool> getLoginStatus() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('isLoggedIn') ?? false;
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DatabaseHelper().database; 
+  final isLoggedIn = await getLoginStatus();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserNotifier()),
         ChangeNotifierProvider(create: (_) => CategoryNotifier()),
       ],
-      child: MyApp(),
+      child: MyApp(isLoggedIn: isLoggedIn),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+
+  const MyApp({required this.isLoggedIn, super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -47,16 +61,23 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      // Show a loading spinner while waiting for setup check
-      return Center(child: CircularProgressIndicator());
-    }
+    // if (isLoading) {
+    //   // Show a loading spinner while waiting for setup check
+    //   return const MaterialApp(
+    //     home: Center(child: CircularProgressIndicator()),
+    //   );
+    // }
+
+    // If setup is not complete, navigate to the setup page
+    // if (isSetupComplete == null || !isSetupComplete!) {
+    //   return const MaterialApp(
+    //     home: YourCategorySelectPage(), // Replace with your setup page
+    //   );
+    // }
 
     return MaterialApp(
-      initialRoute: isSetupComplete == true ? '/home' : '/',
+      initialRoute: widget.isLoggedIn ? '/home' : '/getStarted',
       routes: AppRouter.getRoutes(),
-      // You can also add a home widget here if necessary
-      // home: isSetupComplete == null ? YourCategorySelectPage() : Container(),
     );
   }
 }

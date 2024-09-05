@@ -155,11 +155,8 @@ class _SelectCategoryState extends State<SelectCategory> {
               //               Navigator.pushReplacement(context,
               // MaterialPageRoute(builder: (context) => HomeScreen()));
 
-              final SharedPreferencesAsync prefs = SharedPreferencesAsync();
-              await prefs.setBool('isSetupComplete', true);
-
-                  bool? isComplete = await prefs.getBool('isSetupComplete');
-               print("iscomplete--- $isComplete");
+              final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('isLoggedIn', true);
 
               Navigator.pushNamedAndRemoveUntil(
                   context, "/home", (Route<dynamic> route) => false);

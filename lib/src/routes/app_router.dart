@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppRouter {
   static getRoutes() {
     return {
-      '/': (context) => const SplashScreen(),
+      // '/': (context) => const SplashScreen(),
       '/getStarted': (context) => const GetStarted(),
       '/selectCurrency': (context) => const SelectCurrency(),
       '/accounts': (context) => const Accounts(),
@@ -21,25 +21,5 @@ class AppRouter {
     };
   }
 
-  //   static Future<void> navigateToHomeAndSetOnboardingComplete(BuildContext context) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setBool('ONBOARDING_COMPLETE', true);
-  //   Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-  // }
-
-  // static Future<bool> isOnboardingComplete() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   return prefs.getBool('ONBOARDING_COMPLETE') ?? false;
-  // }
-
-  // static void navigateToNextScreenAndRemovePrevious(BuildContext context, String routeName) {
-  //   Navigator.of(context).pushNamedAndRemoveUntil(routeName, (Route<dynamic> route) => false);
-  // }
-
-   static Future<void> navigateToNextScreenAndRemovePrevious(BuildContext context) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('ONBOARDING_COMPLETE', 'true');
-  Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-}
-
+  
 }
